@@ -56,7 +56,7 @@ void DB_connect()
 	printf("Oracle Connect SUCCESS by %s\n", uid.arr);
 }
 
-void select_student()
+void select_main()
 {
 	clrscr();
 	char move_page = 0;

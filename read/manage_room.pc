@@ -11,16 +11,11 @@
 #include <sqlcpr.h>
 #include < windows.h >
 
-void gotoxy(int x, int y);
-void getxy(int *x, int *y);
-void clrscr(void);
-void print_screen(char fname[]);
-void DB_connect();
 void search_room();
-void sql_error();
 void select_room();
 void edit_room();
 void room();
+void Insert_Room();
 
 EXEC SQL BEGIN DECLARE SECTION;
 VARCHAR uid[80];
@@ -34,24 +29,6 @@ void room()
 	select_room();
 	EXEC SQL COMMIT WORK RELEASE;
 	_getch();
-}
-
-void DB_connect()
-{
-	strcpy((char *)uid.arr, "b2018317@//sedb.deu.ac.kr:1521/orcl");
-	uid.len = (short)strlen((char *)uid.arr);
-	strcpy((char *)pwd.arr, "2018317");
-	pwd.len = (short)strlen((char *)pwd.arr);
-
-	EXEC SQL CONNECT : uid IDENTIFIED BY : pwd;
-
-	if (sqlca.sqlcode != 0 && sqlca.sqlcode != -1405) {
-		printf("Connect error: %s", sqlca.sqlerrm.sqlerrmc);
-		_getch();
-		exit(-1);
-	}
-
-	printf("Oracle Connect SUCCESS by %s\n", uid.arr);
 }
 
 void select_room()
@@ -73,13 +50,84 @@ void select_room()
 		else if(move_page == 13){
 			clrscr();
 			if(moving == 10)
-				printf("insert");
+				Insert_Room();
 			else if(moving == 12)
 				search_room();
 			else if(moving == 14)
 				edit_room();
 		}
 	}
+}
+void Insert_Room()
+{
+EXEC SQL BEGIN DECLARE SECTION;
+    varchar r_rnum[6];
+    varchar r_person[4];
+    varchar r_stu_A[15];
+    varchar r_stu_B[15];
+    varchar r_isA[2];
+    varchar r_isB[2];
+
+    char sql[1000];
+
+EXEC SQL END DECLARE SECTION;
+
+   /* Register sql_error() as the error handler. */
+    EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+
+   clrscr();
+
+   print_screen("addRoom.txt");
+   
+   /* 호실 번호 입력 */    
+    while(1) {
+        gotoxy(18,9);
+        gets(r_rnum.arr);
+        r_rnum.len = strlen(r_rnum.arr);
+
+        if(r_rnum.len <= 0 ) {
+            gotoxy(9,21); 
+            printf("호실 번호를 입력하지 않았습니다:)");
+        }
+        else break;
+    }
+ 
+   /* 호실 인원 수 입력 */
+    gotoxy(52,9); 
+    gets(r_person.arr);
+    r_person.len = strlen(r_person.arr);
+  
+   /* A자리 학생 이름 입력 */
+    gotoxy(20,11)  ;
+    gets(r_stu_A.arr);
+    r_stu_A.len = strlen(r_stu_A.arr);
+    
+    /* B자리 학생 이름 입력 */
+    gotoxy(54,11)  ;
+    gets(r_stu_B.arr);
+    r_stu_B.len = strlen(r_stu_B.arr);
+
+   /* A학생 존재 여부 입력 */
+    gotoxy(25,13) ;
+    gets(r_isA.arr);
+    r_isA.len = strlen(r_isA.arr);
+   
+    /* B학생 존재 여부 입력 */
+    gotoxy(59,13) ;
+    gets(r_isB.arr);
+    r_isB.len = strlen(r_isB.arr);
+
+
+    sprintf(sql,"insert into ROOM_MANAGE values ( '%s', %s, '%s', '%s', '%s', '%s')" , r_rnum.arr, r_person.arr, r_stu_A.arr, r_stu_B.arr, r_isA.arr, r_isB.arr);
+
+    gotoxy(40,15) ;
+    printf("sql:%s\n", sql);
+
+   /* 실행시킬 SQL 문장*/
+    EXEC SQL EXECUTE IMMEDIATE :sql ;    
+
+    printf("Insert Success\n");
+    EXEC SQL COMMIT WORK ;
 }
 
 void search_room()
@@ -293,93 +341,21 @@ void edit_room()
    
 	EXEC SQL EXECUTE IMMEDIATE :dynstmt ;
 
-	printf("Update Success\n");
+	printf("\nUpdate Success\n");
 	EXEC SQL COMMIT WORK ; 
 
 	gotoxy(7, 25);
-	printf("(수정 1, 삭제 2, 이전 페이지 3, 종료 4) >> ___ ");
+	printf("(수정 1, 이전 페이지 2, 종료 3) >> ___ ");
 	gotoxy(51, 25);
 	gets(no_page);
 	if(no_page[0] == 49)
 		edit_room();
 	else if(no_page[0] == 50)
-		printf("삭제 불러오기");
-	else if(no_page[0] == 51)
 		select_room();
-	else if(no_page[0] == 52)
+	else if(no_page[0] == 51)
 		exit(1);
 	/* Close the cursor. */
 	EXEC SQL CLOSE c_cursor;
 
 	EXEC SQL COMMIT;
 }
-
-void print_screen(char fname[]){
-	FILE *fp;
-	char line[100];
-
-	if ((fp = fopen(fname, "r")) == NULL) {
-		printf("file open error\n");
-		_getch();
-		exit(-1);
-	}
-	while (1)	{
-		if (fgets(line, 99, fp) == NULL) {
-			break;
-		}
-		printf("%s", line);
-	}
-
-	fclose(fp);
-}
-
-/* --------------------------------------------------------------------------
-int sql_error()
-
-	errrpt prints the ORACLE error msg and number.
--------------------------------------------------------------------------- */
-void sql_error(char *msg)
-{
-	char err_msg[128];
-	size_t buf_len, msg_len;
-
-	EXEC SQL WHENEVER SQLERROR CONTINUE;
-
-	printf("\n%s\n", msg);
-	buf_len = sizeof(err_msg);
-	sqlglm(err_msg, &buf_len, &msg_len);
-	printf("%.*s\n", msg_len, err_msg);
-
-	_getch();
-	EXEC SQL ROLLBACK WORK;
-	//exit(EXIT_FAILURE);
-}
-
-/*---------------  화면 커서 제어 함수 --------------------*/
-#define STD_HANDLE GetStdHandle(STD_OUTPUT_HANDLE)
-
-void gotoxy(int x, int y)
-{
-	COORD Cur = { (SHORT)x, (SHORT)y };
-
-	SetConsoleCursorPosition(STD_HANDLE, Cur);
-}
-
-void getxy(int *x, int *y)
-{
-	CONSOLE_SCREEN_BUFFER_INFO Buf;
-
-	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &Buf);
-	*x = (int)Buf.dwCursorPosition.X;
-	*y = (int)Buf.dwCursorPosition.Y;
-
-}
-
-void clrscr(void)
-{
-	COORD Cur = { 0, 0 };
-	unsigned long dwLen;
-
-	FillConsoleOutputCharacter(STD_HANDLE, ' ', 100 * 50, Cur, &dwLen);
-}
-

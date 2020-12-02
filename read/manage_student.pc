@@ -11,13 +11,7 @@
 #include <sqlcpr.h>
 #include < windows.h >
 
-void gotoxy(int x, int y);
-void getxy(int *x, int *y);
-void clrscr(void);
-void print_screen(char fname[]);
-void DB_connect();
 void search_student();
-void sql_error();
 void select_student();
 void edit_student();
 void insert_student();
@@ -35,24 +29,6 @@ void student()
 	select_student();
 	EXEC SQL COMMIT WORK RELEASE;
 	_getch();
-}
-
-void DB_connect()
-{
-	strcpy((char *)uid.arr, "b2018317@//sedb.deu.ac.kr:1521/orcl");
-	uid.len = (short)strlen((char *)uid.arr);
-	strcpy((char *)pwd.arr, "2018317");
-	pwd.len = (short)strlen((char *)pwd.arr);
-
-	EXEC SQL CONNECT : uid IDENTIFIED BY : pwd;
-
-	if (sqlca.sqlcode != 0 && sqlca.sqlcode != -1405) {
-		printf("Connect error: %s", sqlca.sqlerrm.sqlerrmc);
-		_getch();
-		exit(-1);
-	}
-
-	printf("Oracle Connect SUCCESS by %s\n", uid.arr);
 }
 
 void select_student()
@@ -458,90 +434,18 @@ void edit_student(){
 	printf("\nUpdate Success\n");
 	EXEC SQL COMMIT WORK ; 
 
-	gotoxy(7, 34);
-	printf("(수정 1, 삭제 2, 이전 페이지 3, 종료 4) >> ___ ");
+	gotoxy(7, 25);
+	printf("(수정 1, 이전 페이지 2, 종료 3) >> ___ ");
 	gotoxy(51, 25);
 	gets(no_page);
 	if(no_page[0] == 49)
 		edit_student();
 	else if(no_page[0] == 50)
-		printf("삭제 불러오기");
-	else if(no_page[0] == 51)
 		select_student();
-	else if(no_page[0] == 52)
+	else if(no_page[0] == 51)
 		exit(1);
 	/* Close the cursor. */
 	EXEC SQL CLOSE c_cursor;
 
 	EXEC SQL COMMIT;
 }
-
-void print_screen(char fname[]){
-	FILE *fp;
-	char line[100];
-
-	if ((fp = fopen(fname, "r")) == NULL) {
-		printf("file open error\n");
-		_getch();
-		exit(-1);
-	}
-	while (1)	{
-		if (fgets(line, 99, fp) == NULL) {
-			break;
-		}
-		printf("%s", line);
-	}
-
-	fclose(fp);
-}
-
-/* --------------------------------------------------------------------------
-int sql_error()
-
-	errrpt prints the ORACLE error msg and number.
--------------------------------------------------------------------------- */
-void sql_error(char *msg)
-{
-	char err_msg[128];
-	size_t buf_len, msg_len;
-
-	EXEC SQL WHENEVER SQLERROR CONTINUE;
-
-	printf("\n%s\n", msg);
-	buf_len = sizeof(err_msg);
-	sqlglm(err_msg, &buf_len, &msg_len);
-	printf("%.*s\n", msg_len, err_msg);
-
-	_getch();
-	EXEC SQL ROLLBACK WORK;
-	//exit(EXIT_FAILURE);
-}
-
-/*---------------  화면 커서 제어 함수 --------------------*/
-#define STD_HANDLE GetStdHandle(STD_OUTPUT_HANDLE)
-
-void gotoxy(int x, int y)
-{
-	COORD Cur = { (SHORT)x, (SHORT)y };
-
-	SetConsoleCursorPosition(STD_HANDLE, Cur);
-}
-
-void getxy(int *x, int *y)
-{
-	CONSOLE_SCREEN_BUFFER_INFO Buf;
-
-	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &Buf);
-	*x = (int)Buf.dwCursorPosition.X;
-	*y = (int)Buf.dwCursorPosition.Y;
-
-}
-
-void clrscr(void)
-{
-	COORD Cur = { 0, 0 };
-	unsigned long dwLen;
-
-	FillConsoleOutputCharacter(STD_HANDLE, ' ', 100 * 50, Cur, &dwLen);
-}
-
