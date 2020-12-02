@@ -16,6 +16,7 @@ void getxy(int *x, int *y);
 void clrscr(void);
 void print_screen(char fname[]);
 void DB_connect();
+void Insert_Room();
 void search_room();
 void sql_error();
 void select_room();
@@ -72,13 +73,85 @@ void select_room()
 		else if(move_page == 13){
 			clrscr();
 			if(moving == 10)
-				printf("insert");
+				Insert_Room();
 			else if(moving == 12)
 				search_room();
 			else if(moving == 14)
 				edit_room();
 		}
 	}
+}
+
+void Insert_Room()
+{
+EXEC SQL BEGIN DECLARE SECTION;
+    varchar r_rnum[6];
+    varchar r_person[4];
+    varchar r_stu_A[15];
+    varchar r_stu_B[15];
+    varchar r_isA[2];
+    varchar r_isB[2];
+
+    char sql[1000];
+
+EXEC SQL END DECLARE SECTION;
+
+   /* Register sql_error() as the error handler. */
+    EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+
+   clrscr();
+   gotoxy(0,1);
+   print_screen("addRoom.txt");
+   
+   /* 호실 번호 입력 */    
+    while(1) {
+        gotoxy(18,9);
+        gets(r_rnum.arr);
+        r_rnum.len = strlen(r_rnum.arr);
+
+        if(r_rnum.len <= 0 ) {
+            gotoxy(9,21); 
+            printf("호실 번호를 입력하지 않았습니다:)");
+        }
+        else break;
+    }
+ 
+   /* 호실 인원 수 입력 */
+    gotoxy(52,9); 
+    gets(r_person.arr);
+    r_person.len = strlen(r_person.arr);
+  
+   /* A자리 학생 이름 입력 */
+    gotoxy(20,11)  ;
+    gets(r_stu_A.arr);
+    r_stu_A.len = strlen(r_stu_A.arr);
+    
+    /* B자리 학생 이름 입력 */
+    gotoxy(54,11)  ;
+    gets(r_stu_B.arr);
+    r_stu_B.len = strlen(r_stu_B.arr);
+
+   /* A학생 존재 여부 입력 */
+    gotoxy(25,13) ;
+    gets(r_isA.arr);
+    r_isA.len = strlen(r_isA.arr);
+   
+    /* B학생 존재 여부 입력 */
+    gotoxy(59,13) ;
+    gets(r_isB.arr);
+    r_isB.len = strlen(r_isB.arr);
+
+
+    sprintf(sql,"insert into ROOM_MANAGE values ( '%s', %s, '%s', '%s', '%s', '%s')" , r_rnum.arr, r_person.arr, r_stu_A.arr, r_stu_B.arr, r_isA.arr, r_isB.arr);
+
+    gotoxy(40,15) ;
+    printf("sql:%s\n", sql);
+
+   /* 실행시킬 SQL 문장*/
+    EXEC SQL EXECUTE IMMEDIATE :sql ;    
+
+    printf("Insert Success\n");
+    EXEC SQL COMMIT WORK ;
 }
 
 void search_room()
