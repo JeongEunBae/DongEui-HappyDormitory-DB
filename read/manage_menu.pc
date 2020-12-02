@@ -22,13 +22,14 @@ void select_menu();
 void edit_menu();
 void delete_menu();
 void Insert_Menu();
+void menu();
 
 EXEC SQL BEGIN DECLARE SECTION;
 VARCHAR uid[80];
 VARCHAR pwd[20];
 EXEC SQL END DECLARE SECTION;
 
-void main()
+void menu()
 {
 	_putenv("NLS_LANG=American_America.KO16KSC5601");//한글을 사용하기 위한 코드
 	DB_connect();
