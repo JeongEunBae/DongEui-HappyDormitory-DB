@@ -218,9 +218,9 @@ EXEC SQL END DECLARE SECTION;
         printf("호실 자리를 제대로 작성하라구! 'A~Z'사이라구:)");
     }
 
-    sprintf(sql,"insert into DORM_STUDENTS_MANAGE values ( '%s', TO_NUMBER(%s), '%s', %s, %s, '%s', '%s', %s, '%s', '%s')" , d_sname.arr, d_snum.arr, d_major.arr, d_badpoint.arr, d_goodpoint.arr, d_rnum.arr, d_rposition.arr, d_outdate.arr, d_sex.arr, d_phonenum.arr );
+    sprintf(sql,"insert into DORM_STUDENTS_MANAGE values ('%s', TO_NUMBER(%s), '%s', %s, %s, '%s', '%s', %s, '%s', '%s')" , d_sname.arr, d_snum.arr, d_major.arr, d_badpoint.arr, d_goodpoint.arr, d_rnum.arr, d_rposition.arr, d_outdate.arr, d_sex.arr, d_phonenum.arr );
 
-    gotoxy(40,15) ;
+    gotoxy(40,20) ;
     printf("sql:%s\n", sql);
    /* 실행시킬 SQL 문장*/
     EXEC SQL EXECUTE IMMEDIATE :sql ;
