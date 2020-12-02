@@ -24,7 +24,7 @@ EXEC SQL END DECLARE SECTION;
 
 void stayout()
 {
-	_putenv("NLS_LANG=American_America.KO16KSC5601");//ÇÑ±ÛÀ» »ç¿ëÇÏ±â À§ÇÑ ÄÚµå
+	_putenv("NLS_LANG=American_America.KO16KSC5601");//í•œê¸€ì„ ì‚¬ìš©í•˜ê¸° ìœ„í•œ ì½”ë“œ
 	DB_connect();
 	select_stayout();
 	EXEC SQL COMMIT WORK RELEASE;
@@ -50,7 +50,7 @@ void select_stayout()
 		else if(move_page == 13){
 			clrscr();
 			if(moving == 10)
-				insert_stayout();
+				Insert_Stayout();
 			else if(moving == 12)
 				search_stayout();
 			else if(moving == 14)
@@ -78,7 +78,7 @@ EXEC SQL END DECLARE SECTION;
 
    print_screen("addStayout.txt");
    
-   /* °ü»ı ÀÌ¸§ ÀÔ·Â */
+   /* ê´€ìƒ ì´ë¦„ ì…ë ¥ */
     while(1) {
         gotoxy(18,8); 
         gets(s_sname.arr);
@@ -86,12 +86,12 @@ EXEC SQL END DECLARE SECTION;
 
         if(s_sname.len <= 0 ) {
             gotoxy(9,21); 
-            printf("°ü»ı ÀÌ¸§À» ÀÔ·ÂÇÏÁö ¾Ê¾Ò½À´Ï´Ù:)");
+            printf("ê´€ìƒ ì´ë¦„ì„ ì…ë ¥í•˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤:)");
         }
         else break;
     }
  
-   /* °ü»ı ÇĞ¹ø ÀÔ·Â */
+   /* ê´€ìƒ í•™ë²ˆ ì…ë ¥ */
    while(1) {
         gotoxy(54,8);
         gets(s_snum.arr);
@@ -99,7 +99,7 @@ EXEC SQL END DECLARE SECTION;
 
         if(s_snum.len < 8) {
             gotoxy(9,21); 
-            printf("°ü»ı ÇĞ¹øÀº ¼ıÀÚ 8ÀÚ¸®ÀÔ´Ï´Ù:) ³Ñ Àû°Ô ÀÔ·ÂÇß¿À¤Ğ");
+            printf("ê´€ìƒ í•™ë²ˆì€ ìˆ«ì 8ìë¦¬ì…ë‹ˆë‹¤:) ë„˜ ì ê²Œ ì…ë ¥í–ˆì˜¤ã… ");
         }
         else {
             int i;
@@ -108,11 +108,11 @@ EXEC SQL END DECLARE SECTION;
             }
             if(i >= s_snum.len) break;
             gotoxy(9,21);
-            printf("°ü»ı ÇĞ¹øÀº ¼ıÀÚ¸¸ ÀÔ·Â ÇÒ ¼ö ÀÖ½À´Ï´Ù:) ¶È¹Ù·ç ÇÏ¶ó±¸!");
+            printf("ê´€ìƒ í•™ë²ˆì€ ìˆ«ìë§Œ ì…ë ¥ í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤:) ë˜‘ë°”ë£¨ í•˜ë¼êµ¬!");
         }
     }
   
-   /* °ü»ı È£½Ç ÀÔ·Â */
+   /* ê´€ìƒ í˜¸ì‹¤ ì…ë ¥ */
     while(1) {
         gotoxy(18,10);
         gets(s_rnum.arr);
@@ -120,12 +120,12 @@ EXEC SQL END DECLARE SECTION;
 
         if(s_rnum.len <= 0 ) {
             gotoxy(9,21); 
-            printf("È£½Ç ¹øÈ£¸¦ ÀÔ·ÂÇÏÁö ¾Ê¾Ò½À´Ï´Ù:)");
+            printf("í˜¸ì‹¤ ë²ˆí˜¸ë¥¼ ì…ë ¥í•˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤:)");
         }
         else break;
     }
     
-    /* ½ÅÃ» ¿©ºÎ ÀÔ·Â */
+    /* ì‹ ì²­ ì—¬ë¶€ ì…ë ¥ */
     while(1) {
         gotoxy(54,10);
         gets(s_apply.arr);
@@ -135,10 +135,10 @@ EXEC SQL END DECLARE SECTION;
             if(s_apply.arr[0] == '0' || s_apply.arr[0] == '1') break;
         }
         gotoxy(9,21); 
-        printf("½ÅÃ» ¿©ºÎ´Â 0(½ÅÃ»X), 1(½ÅÃ») µÎ °³ÀÇ ¼ıÀÚ·Î¸¸ ÀÌ·ç¾îÁ®ÀÖ½À´Ï´Ù:)");
+        printf("ì‹ ì²­ ì—¬ë¶€ëŠ” 0(ì‹ ì²­X), 1(ì‹ ì²­) ë‘ ê°œì˜ ìˆ«ìë¡œë§Œ ì´ë£¨ì–´ì ¸ìˆìŠµë‹ˆë‹¤:)");
     }
 
-    /* ³¯Â¥ ÀÔ·Â */
+    /* ë‚ ì§œ ì…ë ¥ */
     while(1) {
         gotoxy(18,12);
         gets(s_date.arr);
@@ -146,7 +146,7 @@ EXEC SQL END DECLARE SECTION;
 
         if(s_date.len <= 0 ) {
             gotoxy(9,21); 
-            printf("³¯Â¥°¡ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù:)");
+            printf("ë‚ ì§œê°€ ì…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤:)");
         }
         else break;
     }
@@ -155,7 +155,7 @@ EXEC SQL END DECLARE SECTION;
 
     gotoxy(40,15) ;
     printf("sql:%s\n", sql);
-   /* ½ÇÇà½ÃÅ³ SQL ¹®Àå*/
+   /* ì‹¤í–‰ì‹œí‚¬ SQL ë¬¸ì¥*/
     EXEC SQL EXECUTE IMMEDIATE :sql ;    
 
     printf("Insert Success\n");
@@ -200,24 +200,24 @@ void search_stayout()
 	gets(no_rnum);
 	gotoxy(46, 9);
 	gets(no_date);
-	/* »ç¿ëÀÚ ÀÔ·Â */
+	/* ì‚¬ìš©ì ì…ë ¥ */
 	gotoxy(0, 13);
-	printf(" %s, %s, %s, %s ·Î °Ë»öÇÑ °á°úÀÔ´Ï´Ù.", no_sname, no_snum, no_rnum, no_date);
+	printf(" %s, %s, %s, %s ë¡œ ê²€ìƒ‰í•œ ê²°ê³¼ì…ë‹ˆë‹¤.", no_sname, no_snum, no_rnum, no_date);
 	gotoxy(0, 14);
-	printf(" (ÀÌ¸§, ÇĞ¹ø, ¹æ¹øÈ£, ¿Ü¹Ú½ÅÃ»ÀÏ¼ö, ¿Ü¹Ú½ÅÃ»ÀÏ)");
+	printf(" (ì´ë¦„, í•™ë²ˆ, ë°©ë²ˆí˜¸, ì™¸ë°•ì‹ ì²­ì¼ìˆ˜, ì™¸ë°•ì‹ ì²­ì¼)");
 	gotoxy(1, 15);
 	printf(" ---------------------------------------------------------");
 
 
-	/* ½ÇÇà½ÃÅ³ SQL ¹®Àå*/
+	/* ì‹¤í–‰ì‹œí‚¬ SQL ë¬¸ì¥*/
 	sprintf(dynstmt, "SELECT * FROM STAYOUT_MANAGE where to_char(S_SNAME) LIKE '%%%s%%' OR to_char(S_SNUM) LIKE '%%%s%%' OR to_char(S_RNUM) LIKE '%%%s%%' OR to_char(S_DATE, 'YY/MM/DD') LIKE '%%%s%%' ", no_sname, no_snum, no_rnum, no_date);
 
-	/* select ¹®ÀåÀÌ Á¦´ë·Î ±¸¼ºµÇ¾î ÀÖ´ÂÁö È­¸é¿¡ Âï¾îº½ */
+	/* select ë¬¸ì¥ì´ ì œëŒ€ë¡œ êµ¬ì„±ë˜ì–´ ìˆëŠ”ì§€ í™”ë©´ì— ì°ì–´ë´„ */
 	//printf("dynstmt:%s\n", dynstmt);
 
 	EXEC SQL PREPARE S FROM : dynstmt;
 
-	/* cursor ¼±¾ğ */
+	/* cursor ì„ ì–¸ */
 	EXEC SQL DECLARE c_cursor CURSOR FOR S;
 
 	/* cursor open */
@@ -243,13 +243,13 @@ void search_stayout()
 		count++;
 	}
 	gotoxy(7, 25);
-	printf("(¼öÁ¤ 1, »èÁ¦ 2, ÀÌÀü ÆäÀÌÁö 3, Á¾·á 4) >> ___ ");
+	printf("(ìˆ˜ì • 1, ì‚­ì œ 2, ì´ì „ í˜ì´ì§€ 3, ì¢…ë£Œ 4) >> ___ ");
 	gotoxy(51, 25);
 	gets(no_page);
 	if(no_page[0] == 49)
 		edit_stayout();
 	else if(no_page[0] == 50)
-		printf("»èÁ¦ ºÒ·¯¿À±â");
+		printf("ì‚­ì œ ë¶ˆëŸ¬ì˜¤ê¸°");
 	else if(no_page[0] == 51)
 		select_stayout();
 	else if(no_page[0] == 52)
@@ -294,15 +294,15 @@ void edit_stayout()
 	gets(no_snum);
 	gotoxy(20, 10);
 
-	/* ½ÇÇà½ÃÅ³ SQL ¹®Àå*/
+	/* ì‹¤í–‰ì‹œí‚¬ SQL ë¬¸ì¥*/
 	sprintf(dynstmt, "SELECT * FROM STAYOUT_MANAGE where to_char(S_SNUM) LIKE '%%%s%%' ", no_snum);
 
-	/* select ¹®ÀåÀÌ Á¦´ë·Î ±¸¼ºµÇ¾î ÀÖ´ÂÁö È­¸é¿¡ Âï¾îº½ */
+	/* select ë¬¸ì¥ì´ ì œëŒ€ë¡œ êµ¬ì„±ë˜ì–´ ìˆëŠ”ì§€ í™”ë©´ì— ì°ì–´ë´„ */
 	//printf("dynstmt:%s\n", dynstmt);
 
 	EXEC SQL PREPARE S FROM : dynstmt;
 
-	/* cursor ¼±¾ğ */
+	/* cursor ì„ ì–¸ */
 	EXEC SQL DECLARE c_cursor CURSOR FOR S;
 
 	/* cursor open */
@@ -329,7 +329,7 @@ void edit_stayout()
 	printf("%s", S_APPLY.arr);
 	gotoxy(54, 12);	
 	printf("%s", S_DATE.arr);
-	/* »ç¿ëÀÚ ÀÔ·Â */
+	/* ì‚¬ìš©ì ì…ë ¥ */
 
 	gotoxy(16, 16);
 	gets(name);
@@ -350,7 +350,7 @@ void edit_stayout()
 	EXEC SQL COMMIT WORK ; 
 
 	gotoxy(7, 25);
-	printf("(¼öÁ¤ 1, ÀÌÀü ÆäÀÌÁö 2, Á¾·á 3) >> ___ ");
+	printf("(ìˆ˜ì • 1, ì´ì „ í˜ì´ì§€ 2, ì¢…ë£Œ 3) >> ___ ");
 	gotoxy(51, 25);
 	gets(no_page);
 	if(no_page[0] == 49)
