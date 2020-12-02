@@ -76,9 +76,11 @@ EXEC SQL END DECLARE SECTION;
 
    /* Register sql_error() as the error handler. */
     EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
-
+	
+   
+	char no_page[2];
    clrscr();
-
+   gotoxy(0,1);
    print_screen("addMenu.txt");
    
    /* 아침 메뉴 입력 */
