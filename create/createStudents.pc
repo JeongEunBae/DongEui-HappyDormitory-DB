@@ -77,156 +77,156 @@ void DB_connect()
 
 void Insert_Students()
 {
-EXEC SQL BEGIN DECLARE SECTION;
-    varchar d_sname[15];
-    varchar d_snum[100];
-    varchar d_major[30];
-    varchar d_goodpoint[4];
-    varchar d_badpoint[4];
-    varchar d_rnum[6];
-    varchar d_rposition[2];
-    varchar d_outdate[2];
-    varchar d_sex[4];
-    varchar d_phonenum[13];
+	EXEC SQL BEGIN DECLARE SECTION;
+	varchar d_sname[15];
+	varchar d_snum[100];
+	varchar d_major[30];
+	varchar d_goodpoint[4];
+	varchar d_badpoint[4];
+	varchar d_rnum[6];
+	varchar d_rposition[2];
+	varchar d_outdate[2];
+	varchar d_sex[4];
+	varchar d_phonenum[13];
 
-    char sql[1000];
+	char sql[1000];
 
-EXEC SQL END DECLARE SECTION;
+	EXEC SQL END DECLARE SECTION;
 
-   /* Register sql_error() as the error handler. */
-    EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+	/* Register sql_error() as the error handler. */
+	EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
 
-   clrscr();
+	clrscr();
+	gotoxy(0,1);
+	print_screen("addPerson.txt");
 
-   print_screen("addPerson.txt");
-   
-   /* 관생 이름 입력 */
-    while(1) {
-        gotoxy(18,9); 
-        gets(d_sname.arr);
-        d_sname.len = strlen(d_sname.arr);
+	/* 관생 이름 입력 */
+	while (1) {
+		gotoxy(18, 9);
+		gets(d_sname.arr);
+		d_sname.len = strlen(d_sname.arr);
 
-        if(d_sname.len <= 0 ) {
-            gotoxy(9,21); 
-            printf("관생 이름을 입력하지 않았습니다:)");
-        }
-        else break;
-    }
+		if (d_sname.len <= 0) {
+			gotoxy(9, 21);
+			printf("관생 이름을 입력하지 않았습니다:)");
+		}
+		else break;
+	}
 
-   /* 관생 학번 입력 */
-   while(1) {
-        gotoxy(54,9);
-        gets(d_snum.arr);
-        d_snum.len = strlen(d_snum.arr);
+	/* 관생 학번 입력 */
+	while (1) {
+		gotoxy(54, 9);
+		gets(d_snum.arr);
+		d_snum.len = strlen(d_snum.arr);
 
-        if(d_snum.len < 8) {
-            gotoxy(9,21); 
-            printf("관생 학번은 숫자 8자리입니다:) 넘 적게 입력했오ㅠ");
-        }
-        else {
-            int i;
-            for(i = 0; i < d_snum.len; i++) {
-                if ('0' > d_snum.arr[i] || '9' < d_snum.arr[i] ) break;
-            }
-            if(i >= d_snum.len) break;
-            gotoxy(9,21);
-            printf("관생 학번은 숫자만 입력 할 수 있습니다:) 똑바루 하라구!");
-        }
-    }
-    
-
-   /* 관생 학과 입력 */
-    gotoxy(18,11);
-    gets(d_major.arr);
-    d_major.len = strlen(d_major.arr);
-   
-    /* 관생 상점 입력 */
-    gotoxy(54,11);
-    gets(d_goodpoint.arr);
-    d_goodpoint.len = strlen(d_goodpoint.arr);
+		if (d_snum.len < 8) {
+			gotoxy(9, 21);
+			printf("관생 학번은 숫자 8자리입니다:) 넘 적게 입력했오ㅠ");
+		}
+		else {
+			int i;
+			for (i = 0; i < d_snum.len; i++) {
+				if ('0' > d_snum.arr[i] || '9' < d_snum.arr[i]) break;
+			}
+			if (i >= d_snum.len) break;
+			gotoxy(9, 21);
+			printf("관생 학번은 숫자만 입력 할 수 있습니다:) 똑바루 하라구!");
+		}
+	}
 
 
-    /* 관생 벌점 입력 */
-    gotoxy(18,13);
-    gets(d_badpoint.arr);
-    d_badpoint.len = strlen(d_badpoint.arr);
+	/* 관생 학과 입력 */
+	gotoxy(18, 11);
+	gets(d_major.arr);
+	d_major.len = strlen(d_major.arr);
 
-    /* 관생 호실 입력 */
-    while(1) {
-        gotoxy(54,13);
-        gets(d_rnum.arr);
-        d_rnum.len = strlen(d_rnum.arr);
+	/* 관생 상점 입력 */
+	gotoxy(54, 11);
+	gets(d_goodpoint.arr);
+	d_goodpoint.len = strlen(d_goodpoint.arr);
 
-        if(d_rnum.len <= 0 ) {
-            gotoxy(9,21); 
-            printf("호실 번호를 입력하지 않았습니다:)");
-        }
-        else break;
-    }
-    
-    /* 관생 외박 일 수 입력 */
-    while(1) {
-        gotoxy(23,15);
-        gets(d_outdate.arr);
-        d_outdate.len = strlen(d_outdate.arr);
 
-        if(d_outdate.len == 2) {
-            int tmp = 0;
-            for(int i = 0; i < d_outdate.len; i++) {
-                tmp += (10 * ((d_outdate.len - 1) - i)) * (d_outdate.arr[i] -'0');
-            }
-            if(tmp <= 20) break;
-        }
-        gotoxy(9,21); 
-        printf("외박 일 수는 최대 20일 입니다:)");
-    }
+	/* 관생 벌점 입력 */
+	gotoxy(18, 13);
+	gets(d_badpoint.arr);
+	d_badpoint.len = strlen(d_badpoint.arr);
 
-    /* 관생 성별 입력 */
-    gotoxy(54,15) ;
-    gets(d_sex.arr);
-    d_sex.len = strlen(d_sex.arr);
-    
-    /* 관생 폰번호 입력 */
-    while(1) {
-        gotoxy(27,17);
-        gets(d_phonenum.arr);
-        d_phonenum.len = strlen(d_phonenum.arr);
+	/* 관생 호실 입력 */
+	while (1) {
+		gotoxy(54, 13);
+		gets(d_rnum.arr);
+		d_rnum.len = strlen(d_rnum.arr);
 
-        if(d_phonenum.len == 13) {
-            int i;
-            for(i = 0; i < d_phonenum.len; i++) {
-                if(i == 3 || i == 8) continue;
-                if('0' > d_phonenum.arr[i] || '9' < d_phonenum.arr[i]) break;
-            }
-            if(i >= d_phonenum.len) break;
-        }
-        gotoxy(9,21);
-        printf("휴대폰 번호 양식이 아닙니다. '010-XXXX-XXXX'형식으로 입력하세요:)");
-    }
-    
-    /* 관생 호실 자리 입력 */
-    while(1) {
-        gotoxy(54,17);
-        gets(d_rposition.arr);
-        d_rposition.len = strlen(d_rposition.arr);
+		if (d_rnum.len <= 0) {
+			gotoxy(9, 21);
+			printf("호실 번호를 입력하지 않았습니다:)");
+		}
+		else break;
+	}
 
-        if(d_rposition.len == 1 ) {
-           if('A' <= d_rposition.arr[0] && d_rposition.arr[0] <= 'Z') break;
-        }
-        gotoxy(9,21); 
-        printf("%d", d_rposition.len);
-        printf("호실 자리를 제대로 작성하라구! 'A~Z'사이라구:)");
-    }
+	/* 관생 외박 일 수 입력 */
+	while (1) {
+		gotoxy(23, 15);
+		gets(d_outdate.arr);
+		d_outdate.len = strlen(d_outdate.arr);
 
-    sprintf(sql,"insert into DORM_STUDENTS_MANAGE values ('%s', TO_NUMBER(%s), '%s', %s, %s, '%s', '%s', %s, '%s', '%s')" , d_sname.arr, d_snum.arr, d_major.arr, d_badpoint.arr, d_goodpoint.arr, d_rnum.arr, d_rposition.arr, d_outdate.arr, d_sex.arr, d_phonenum.arr );
+		if (d_outdate.len == 2) {
+			int tmp = 0;
+			for (int i = 0; i < d_outdate.len; i++) {
+				tmp += (10 * ((d_outdate.len - 1) - i)) * (d_outdate.arr[i] - '0');
+			}
+			if (tmp <= 20) break;
+		}
+		gotoxy(9, 21);
+		printf("외박 일 수는 최대 20일 입니다:)");
+	}
 
-    gotoxy(40,20) ;
-    printf("sql:%s\n", sql);
-   /* 실행시킬 SQL 문장*/
-    EXEC SQL EXECUTE IMMEDIATE :sql ;
+	/* 관생 성별 입력 */
+	gotoxy(54, 15);
+	gets(d_sex.arr);
+	d_sex.len = strlen(d_sex.arr);
 
-    printf("Insert Success\n");
-    EXEC SQL COMMIT WORK ;
+	/* 관생 폰번호 입력 */
+	while (1) {
+		gotoxy(27, 17);
+		gets(d_phonenum.arr);
+		d_phonenum.len = strlen(d_phonenum.arr);
+
+		if (d_phonenum.len == 13) {
+			int i;
+			for (i = 0; i < d_phonenum.len; i++) {
+				if (i == 3 || i == 8) continue;
+				if ('0' > d_phonenum.arr[i] || '9' < d_phonenum.arr[i]) break;
+			}
+			if (i >= d_phonenum.len) break;
+		}
+		gotoxy(9, 21);
+		printf("휴대폰 번호 양식이 아닙니다. '010-XXXX-XXXX'형식으로 입력하세요:)");
+	}
+
+	/* 관생 호실 자리 입력 */
+	while (1) {
+		gotoxy(54, 17);
+		gets(d_rposition.arr);
+		d_rposition.len = strlen(d_rposition.arr);
+
+		if (d_rposition.len == 1) {
+			if ('A' <= d_rposition.arr[0] && d_rposition.arr[0] <= 'Z') break;
+		}
+		gotoxy(9, 21);
+		printf("%d", d_rposition.len);
+		printf("호실 자리를 제대로 작성하라구! 'A~Z'사이라구:)");
+	}
+
+	sprintf(sql, "insert into DORM_STUDENTS_MANAGE values ('%s', TO_NUMBER(%s), '%s', %s, %s, '%s', '%s', %s, '%s', '%s')", d_sname.arr, d_snum.arr, d_major.arr, d_badpoint.arr, d_goodpoint.arr, d_rnum.arr, d_rposition.arr, d_outdate.arr, d_sex.arr, d_phonenum.arr);
+
+	gotoxy(40, 20);
+	printf("sql:%s\n", sql);
+	/* 실행시킬 SQL 문장*/
+	EXEC SQL EXECUTE IMMEDIATE : sql;
+
+	printf("Insert Success\n");
+	EXEC SQL COMMIT WORK;
 }
 
 void Insert_Room()
